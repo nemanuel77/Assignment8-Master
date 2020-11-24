@@ -9,7 +9,11 @@ import android.os.Bundle;
 
 import java.util.ArrayList;
 
-public class BrowserActivity extends AppCompatActivity implements PageControlFragment.PageControlInterface, PageViewerFragment.PageViewerInterface, BrowserControlFragment.BrowserControlInterface, PagerFragment.PagerInterface, PageListFragment.PageListInterface {
+public class BrowserActivity extends AppCompatActivity implements PageControlFragment.PageControlInterface,
+        PageViewerFragment.PageViewerInterface,
+        BrowserControlFragment.BrowserControlInterface,
+        PagerFragment.PagerInterface,
+        PageListFragment.PageListInterface {
 
     FragmentManager fm;
 
