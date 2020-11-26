@@ -158,6 +158,8 @@ public class PagerFragment extends Fragment {
         return (pages.get(viewPager.getCurrentItem())).getTitle();
     }
 
+    public int getNumOfPageFragments(){ return ( viewPager.getChildCount());}
+
     interface PagerInterface {
         void updateUrl(String url);
         void updateTitle(String title);

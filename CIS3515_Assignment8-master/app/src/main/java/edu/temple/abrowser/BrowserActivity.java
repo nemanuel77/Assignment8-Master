@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -25,6 +28,9 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     PagerFragment pagerFragment;
 
     ArrayList<PageViewerFragment> pages;
+
+    BookmarkListObject listItem;
+    ArrayList<BookmarkListObject> objectList = new ArrayList<BookmarkListObject>();
 
     boolean listMode;
 
@@ -195,6 +201,36 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         pagerFragment.showPage(pages.size() - 1);
         // Clear the displayed URL in PageControlFragment and title in the activity
         clearIdentifiers();
+    }
+
+    @Override
+    public void createBookmark() {
+        if(pagerFragment.getNumOfPageFragments() != 0){
+            Log.d("SHOW: ", pagerFragment.getCurrentUrl() + "," +pagerFragment.getCurrentTitle());
+            if (pagerFragment.getCurrentUrl() != null && pagerFragment.getCurrentTitle() != null){
+                String title = pagerFragment.getCurrentTitle();
+                String web = pagerFragment.getCurrentUrl();
+                listItem = new BookmarkListObject(title,web);
+                objectList.add(listItem);
+                Log.d("QQQ:", "ADDED: " +listItem.getThePageTitle() + "," + listItem.getTheUrl() +", COUNT: " +objectList.size());
+
+            }
+            else{
+                Toast.makeText(this, "Cannot save a bookmark of a blank browser", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else{
+            Toast.makeText(this, "ViewPager is empty", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
+    @Override
+    public void openBookmarks() {
+        Intent newIntent = new Intent(BrowserActivity.this, BookmarkActivity.class);
+        newIntent.putParcelableArrayListExtra("bookmarks", objectList);
+        startActivity(newIntent);
     }
 
     /**

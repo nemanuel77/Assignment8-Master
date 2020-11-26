@@ -51,8 +51,11 @@ public class BrowserControlFragment extends Fragment {
         View.OnClickListener newBookmark = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (v.equals(newBookmarkButton))
-                    Toast.makeText(getContext(), "You clicked the new Bookmark Button", Toast.LENGTH_SHORT).show();
+                if (v.equals(newBookmarkButton)) {
+                    //Toast.makeText(getContext(), "You clicked the new Bookmark Button", Toast.LENGTH_SHORT).show();
+                    browserActivity.createBookmark();
+                }
+
             }
         };
         newBookmarkButton.setOnClickListener(newBookmark);
@@ -60,12 +63,18 @@ public class BrowserControlFragment extends Fragment {
         View.OnClickListener myBookList = new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                if (v.equals(myBookmarkList))
-                    Toast.makeText(getContext(), "You clicked the Bookmark List Button", Toast.LENGTH_SHORT).show();
-                 //either create an interface method to tell the main browser to initiate a jawn or do it here
+                if (v.equals(myBookmarkList)) {
 
-                Intent newIntent = new Intent(getActivity(), BookmarkActivity.class);
-                startActivity(newIntent);
+                    //Toast.makeText(getContext(), "You clicked the Bookmark List Button", Toast.LENGTH_SHORT).show();
+                    //start this in main activity using interface method
+
+                    browserActivity.openBookmarks();
+
+
+                }
+
+
+
 
             }
         };
@@ -76,5 +85,7 @@ public class BrowserControlFragment extends Fragment {
 
     interface BrowserControlInterface {
         void newPage();
+        void createBookmark();
+        void openBookmarks();
     }
 }

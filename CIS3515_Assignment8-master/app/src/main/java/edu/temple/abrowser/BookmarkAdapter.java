@@ -25,12 +25,13 @@ import java.util.List;
 
 
 public class BookmarkAdapter extends BaseAdapter implements ListAdapter{
-    private ArrayList<String> myInternalArrayList;
+    private ArrayList<BookmarkListObject> myInternalArrayList;
+    BookmarkListObject internalObject;
     private Context thisContext;
     /*TextView myListTextView;
     ImageButton myListImgBtn;*/
 
-    public BookmarkAdapter(Context context, ArrayList<String> extList){
+    public BookmarkAdapter(Context context, ArrayList<BookmarkListObject> extList){
         thisContext = context;
         myInternalArrayList = extList;
 
@@ -43,7 +44,12 @@ public class BookmarkAdapter extends BaseAdapter implements ListAdapter{
 
     @Override
     public Object getItem(int position) {
-        return myInternalArrayList.get(position);
+        //internalObject = new BookmarkListObject();
+        internalObject = myInternalArrayList.get(position);
+
+        //return myInternalArrayList.get(position);
+        Log.d("ZZZ", internalObject.getThePageTitle());
+        return internalObject.getThePageTitle();
     }
 
     @Override
@@ -68,6 +74,8 @@ public class BookmarkAdapter extends BaseAdapter implements ListAdapter{
        }
 
        ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+       //this is currently displaying the arraylist index position in memory
+        // figure out how to show position's object's webtitle
        viewHolder.mylistTextView.setText(getItem(position).toString());
 
         viewHolder.mylistImgBtn.setOnClickListener(new View.OnClickListener() {

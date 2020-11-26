@@ -9,13 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-public class PageViewerFragment extends Fragment {
+public class PageViewerFragment extends Fragment implements Parcelable {
 
     private static final String URL_KEY = "url";
 
@@ -146,6 +148,16 @@ public class PageViewerFragment extends Fragment {
             return webView.getUrl();
         else
             return "";
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 
     interface PageViewerInterface {

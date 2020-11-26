@@ -2,6 +2,7 @@ package edu.temple.abrowser;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.FontsContract;
 import android.util.Log;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookmarkActivity extends AppCompatActivity {
-    ArrayList<String> arrayList;
+    ArrayList<BookmarkListObject> arrayList;
     ListView listView;
     Button myCloseActivityButton;
 
@@ -24,13 +25,13 @@ public class BookmarkActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmark);
 
+        Intent thisIntent = getIntent();
+        /*thisIntent.getParcelableArrayListExtra("bookmarks");*/
 
-
-        arrayList = new ArrayList<String>();
-        arrayList.add("String1");
-        arrayList.add("String2");
-        arrayList.add("String3");
-
+        arrayList = new ArrayList<>();
+        Log.d("AAA", "SIZE OF ACTIVITY LIST IS: " + arrayList.size());
+        arrayList = thisIntent.getParcelableArrayListExtra("bookmarks");
+        Log.d("AAA", "SIZE IS NOW: " + arrayList.size());
 
         BookmarkAdapter bookmarkAdapter = new BookmarkAdapter(this, arrayList);
         listView = (ListView) findViewById(R.id.bookmarkListView);
