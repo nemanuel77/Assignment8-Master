@@ -39,6 +39,7 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         if (savedInstanceState != null)
             pages = (ArrayList) savedInstanceState.getSerializable(PAGES_KEY);
         else
@@ -98,6 +99,27 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
             }
         }
 
+        Intent thisIntent = getIntent();
+        Log.d("BBB", "WE HERE?");
+        Log.d("QQQ", ": "+thisIntent.getStringExtra("theUrl"));
+        if (thisIntent.getStringExtra("theUrl") == null){
+            Log.d("INTENT:", "no received intent.");
+
+        }
+        else{
+
+            String s = thisIntent.getStringExtra("theUrl");
+            Log.d("CCC", "intent string is: "+s);
+            pages = new ArrayList<>();
+            pages.add(PageViewerFragment.newInstance(s));
+
+
+            Log.d("CCC", "pages: " +pages.size());
+            notifyWebsitesChanged();
+            pagerFragment.showPage(pages.size() - 1);
+
+        }
+
     }
 
 
@@ -142,6 +164,18 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         }
 
     }
+
+    /*@Override
+    public void goToBookmarkUrl(String url) {
+        if (pages.size() > 0)
+            pagerFragment.go(url);
+        else {
+            pages.add(PageViewerFragment.newInstance(url));
+            notifyWebsitesChanged();
+            pagerFragment.showPage(pages.size() - 1);
+        }
+    }*/
+
 
     /**
      * Go back to previous page when user presses Back in PageControlFragment

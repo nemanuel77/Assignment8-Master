@@ -1,6 +1,7 @@
 package edu.temple.abrowser;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -73,7 +76,7 @@ public class BookmarkAdapter extends BaseAdapter implements ListAdapter{
 
        }
 
-       ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+       final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
        //this is currently displaying the arraylist index position in memory
         // figure out how to show position's object's webtitle
        viewHolder.mylistTextView.setText(getItem(position).toString());
@@ -89,11 +92,30 @@ public class BookmarkAdapter extends BaseAdapter implements ListAdapter{
             }
         });
 
+        viewHolder.mylistTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                internalObject = myInternalArrayList.get(position);
+                //Toast.makeText(thisContext, "URL: " +internalObject.getTheUrl(), Toast.LENGTH_SHORT).show();
+                startTheActivity(internalObject.getTheUrl());
+
+
+
+            }
+        });
+
+
        return convertView;
     }
 
     public class ViewHolder{
         TextView mylistTextView;
         ImageButton mylistImgBtn;
+    }
+
+    public void startTheActivity(String theUrl){
+        Intent myIntent = new Intent(thisContext, BrowserActivity.class);
+        myIntent.putExtra("theUrl", theUrl);
+        thisContext.startActivity(myIntent);
     }
 }

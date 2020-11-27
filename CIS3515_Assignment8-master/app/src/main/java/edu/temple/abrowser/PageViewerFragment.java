@@ -27,6 +27,22 @@ public class PageViewerFragment extends Fragment implements Parcelable {
     private String url;
 
 
+    protected PageViewerFragment(Parcel in) {
+        url = in.readString();
+    }
+
+    public static final Creator<PageViewerFragment> CREATOR = new Creator<PageViewerFragment>() {
+        @Override
+        public PageViewerFragment createFromParcel(Parcel in) {
+            return new PageViewerFragment(in);
+        }
+
+        @Override
+        public PageViewerFragment[] newArray(int size) {
+            return new PageViewerFragment[size];
+        }
+    };
+
     public static PageViewerFragment newInstance(String url) {
         PageViewerFragment fragment = new PageViewerFragment();
         Bundle bundle = new Bundle();
@@ -157,7 +173,7 @@ public class PageViewerFragment extends Fragment implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeString(url);
     }
 
     interface PageViewerInterface {

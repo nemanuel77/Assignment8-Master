@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.FontsContract;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -35,20 +36,21 @@ public class BookmarkActivity extends AppCompatActivity {
 
         BookmarkAdapter bookmarkAdapter = new BookmarkAdapter(this, arrayList);
         listView = (ListView) findViewById(R.id.bookmarkListView);
+
         listView.setAdapter(bookmarkAdapter);
+        listView.setClickable(true);
 
         myCloseActivityButton = findViewById(R.id.btnCloseActivity);
 
-        myCloseActivityButton.setOnClickListener(new View.OnClickListener() {
+         myCloseActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (v.equals(myCloseActivityButton)){
-                    Log.d("AAA", "YOU CLICKED THE CLOSE ACTIVITY BUTTON");
+                    //Log.d("AAA", "YOU CLICKED THE CLOSE ACTIVITY BUTTON");
                     finish();
                 }
             }
         });
-
 
 
 

@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ public class PagerFragment extends Fragment {
     private ArrayList<PageViewerFragment> pages;
 
     private static final String PAGES_KEY = "pages";
+
+    private View l;
 
     public PagerFragment() {}
 
@@ -45,6 +48,10 @@ public class PagerFragment extends Fragment {
         if (getArguments() != null) {
             pages = (ArrayList) getArguments().getSerializable(PAGES_KEY);
         }
+        else{
+            pages = new ArrayList<>();
+
+        }
     }
 
     @Override
@@ -62,9 +69,10 @@ public class PagerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View l = inflater.inflate(R.layout.fragment_pager, container, false);
+        l = inflater.inflate(R.layout.fragment_pager, container, false);
 
         viewPager = l.findViewById(R.id.viewPager);
+        Log.d("VIEW", "viewPager: " + (viewPager == null));
 
         // Set FragmentStatePagerAdapter to manage pages and provide swipe action
         viewPager.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager()) {
@@ -118,6 +126,7 @@ public class PagerFragment extends Fragment {
      */
     public void showPage(int index) {
         viewPager.setCurrentItem(index);
+
     }
 
     /**
@@ -125,6 +134,9 @@ public class PagerFragment extends Fragment {
      * @param url to load
      */
     public void go(String url) {
+        pages.get(viewPager.getCurrentItem()).go(url);
+    }
+    public void goFromBookmark(String url){
         pages.get(viewPager.getCurrentItem()).go(url);
     }
 

@@ -40,6 +40,9 @@ public class PageListFragment extends Fragment {
         if (getArguments() != null) {
             pages = (ArrayList) getArguments().getSerializable(PAGES_KEY);
         }
+        else{
+            pages = new ArrayList<>();
+        }
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +72,8 @@ public class PageControlFragment extends Fragment {
         urlTextView.setText(url);
     }
 
+
+
     /**
      * Add http to URL if no scheme specified
      * @param url to format
@@ -86,6 +89,7 @@ public class PageControlFragment extends Fragment {
 
     interface PageControlInterface {
         void go(String url);
+        //void goToBookmarkUrl(String url);
         void back();
         void forward();
     }
