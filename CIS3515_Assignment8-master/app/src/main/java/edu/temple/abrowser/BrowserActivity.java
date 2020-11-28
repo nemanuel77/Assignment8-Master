@@ -1,6 +1,7 @@
 package edu.temple.abrowser;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -10,6 +11,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.PageControlInterface,
@@ -33,6 +39,8 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     ArrayList<BookmarkListObject> objectList = new ArrayList<BookmarkListObject>();
 
     boolean listMode;
+
+    private static final int REQ_CODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,26 +107,6 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
             }
         }
 
-        Intent thisIntent = getIntent();
-        Log.d("BBB", "WE HERE?");
-        Log.d("QQQ", ": "+thisIntent.getStringExtra("theUrl"));
-        if (thisIntent.getStringExtra("theUrl") == null){
-            Log.d("INTENT:", "no received intent.");
-
-        }
-        else{
-
-            String s = thisIntent.getStringExtra("theUrl");
-            Log.d("CCC", "intent string is: "+s);
-            pages = new ArrayList<>();
-            pages.add(PageViewerFragment.newInstance(s));
-
-
-            Log.d("CCC", "pages: " +pages.size());
-            notifyWebsitesChanged();
-            pagerFragment.showPage(pages.size() - 1);
-
-        }
 
     }
 
@@ -163,6 +151,17 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
             pagerFragment.showPage(pages.size() - 1);
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CODE)
+            if (resultCode == RESULT_OK){
+               String s = data.getStringExtra("theUrl");
+               go(s);
+
+            }
     }
 
     /*@Override
@@ -238,7 +237,7 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     }
 
     @Override
-    public void createBookmark() {
+    public void createBookmark() throws IOException {
         if(pagerFragment.getNumOfPageFragments() != 0){
             Log.d("SHOW: ", pagerFragment.getCurrentUrl() + "," +pagerFragment.getCurrentTitle());
             if (pagerFragment.getCurrentUrl() != null && pagerFragment.getCurrentTitle() != null){
@@ -246,6 +245,9 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
                 String web = pagerFragment.getCurrentUrl();
                 listItem = new BookmarkListObject(title,web);
                 objectList.add(listItem);
+
+                writeToFile("webpages.txt", title);
+                writeToFile("weburls.txt", web);
                 Log.d("QQQ:", "ADDED: " +listItem.getThePageTitle() + "," + listItem.getTheUrl() +", COUNT: " +objectList.size());
 
             }
@@ -260,11 +262,21 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
     }
 
+    public void writeToFile(String file, String writeFile) throws IOException{
+        File theFile = new File(getFilesDir(), file);
+        FileWriter theWriter = new FileWriter(theFile, true);
+        BufferedWriter bWriter = new BufferedWriter(theWriter);
+        bWriter.append(writeFile);
+        bWriter.newLine();
+        bWriter.flush();
+        bWriter.close();
+    }
+
     @Override
     public void openBookmarks() {
         Intent newIntent = new Intent(BrowserActivity.this, BookmarkActivity.class);
         newIntent.putParcelableArrayListExtra("bookmarks", objectList);
-        startActivity(newIntent);
+        startActivityForResult(newIntent, REQ_CODE);
     }
 
     /**

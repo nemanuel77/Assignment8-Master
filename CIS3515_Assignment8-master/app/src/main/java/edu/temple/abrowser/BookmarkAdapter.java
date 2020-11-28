@@ -1,7 +1,11 @@
 package edu.temple.abrowser;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +27,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +42,13 @@ public class BookmarkAdapter extends BaseAdapter implements ListAdapter{
     private ArrayList<BookmarkListObject> myInternalArrayList;
     BookmarkListObject internalObject;
     private Context thisContext;
+    ViewHolder viewHolder;
+
+    FileInputStream theStream;
+    BufferedReader theReader;
+    File txtfile;
+
+    SharedPreferences savedBookmarks;
     /*TextView myListTextView;
     ImageButton myListImgBtn;*/
 
@@ -65,7 +83,7 @@ public class BookmarkAdapter extends BaseAdapter implements ListAdapter{
 
        if (convertView == null){
 
-           ViewHolder viewHolder = new ViewHolder();
+           viewHolder = new ViewHolder();
            LayoutInflater inflater = LayoutInflater.from(thisContext);
            convertView = inflater.inflate(R.layout.bookmark_list, parent,false);
 
@@ -81,13 +99,52 @@ public class BookmarkAdapter extends BaseAdapter implements ListAdapter{
         // figure out how to show position's object's webtitle
        viewHolder.mylistTextView.setText(getItem(position).toString());
 
+        /*savedBookmarks = thisContext.getSharedPreferences("bookmarks", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = savedBookmarks.edit();
+        edit.putString("title", internalObject.getThePageTitle());
+        edit.putString("url", internalObject.getTheUrl());
+        edit.apply();*/
+
+
         viewHolder.mylistImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("ARRAY", "SIZE IS: " +myInternalArrayList.size());
-                myInternalArrayList.remove(position);
-                notifyDataSetChanged();
-                Log.d("ARRAY", "SIZE IS NOW: " +myInternalArrayList.size());
+
+                AlertDialog.Builder dialog = new AlertDialog.Builder(thisContext);
+                dialog.setMessage("Delete this Bookmark?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                txtfile = new File(thisContext.getFilesDir(), "webpages.txt");
+                                try{
+                                    deleteBookmark(position, txtfile);
+                                }
+                                catch(IOException e){
+                                    e.printStackTrace();
+                                }
+
+                                myInternalArrayList.remove(position);
+                                notifyDataSetChanged();
+
+                                Log.d("ARRAY", "SIZE IS NOW: " +myInternalArrayList.size());
+
+                                dialog.dismiss();
+
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog theAlert = dialog.create();
+                theAlert.setTitle("Confirmation");
+                theAlert.show();
+
+
                 Toast.makeText(thisContext, "You clicked the button at position: " +position, Toast.LENGTH_SHORT).show();
             }
         });
@@ -114,8 +171,27 @@ public class BookmarkAdapter extends BaseAdapter implements ListAdapter{
     }
 
     public void startTheActivity(String theUrl){
-        Intent myIntent = new Intent(thisContext, BrowserActivity.class);
+        Intent myIntent = new Intent();
         myIntent.putExtra("theUrl", theUrl);
-        thisContext.startActivity(myIntent);
+        ((Activity) thisContext).setResult(Activity.RESULT_OK, myIntent);
+        ((Activity) thisContext).finish();
+    }
+
+    public void deleteBookmark(int pos, File file) throws IOException{
+        theStream = new FileInputStream(file);
+        theReader = new BufferedReader(new InputStreamReader(theStream));
+        FileWriter theWriter = new FileWriter(file, true);
+        BufferedWriter bufferedWriter = new BufferedWriter(theWriter);
+
+        String current;
+        int count = 0;
+
+        while ((current = theReader.readLine()) != null){
+            count++;
+            continue;
+
+        }
+        theWriter.close();
+        theReader.close();
     }
 }

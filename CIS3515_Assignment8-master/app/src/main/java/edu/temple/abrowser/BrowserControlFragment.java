@@ -13,10 +13,18 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
 public class BrowserControlFragment extends Fragment {
 
     private BrowserControlInterface browserActivity;
 
+    FileInputStream theStream;
+    BufferedReader theReader;
+    File txtfile;
     public BrowserControlFragment() {}
 
     @Override
@@ -53,7 +61,11 @@ public class BrowserControlFragment extends Fragment {
             public void onClick(View v) {
                 if (v.equals(newBookmarkButton)) {
                     //Toast.makeText(getContext(), "You clicked the new Bookmark Button", Toast.LENGTH_SHORT).show();
-                    browserActivity.createBookmark();
+                    try {
+                        browserActivity.createBookmark();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
             }
@@ -85,7 +97,7 @@ public class BrowserControlFragment extends Fragment {
 
     interface BrowserControlInterface {
         void newPage();
-        void createBookmark();
+        void createBookmark() throws IOException;
         void openBookmarks();
     }
 }
