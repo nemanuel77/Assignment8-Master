@@ -31,9 +31,11 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,19 +118,17 @@ public class BookmarkAdapter extends BaseAdapter implements ListAdapter{
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                txtfile = new File(thisContext.getFilesDir(), "webpages.txt");
                                 try{
-                                    deleteBookmark(position, txtfile);
+                                    BookmarkListObject toBeDeleted = myInternalArrayList.get(position);
+                                    deleteBookmark(toBeDeleted);
+                                    notifyDataSetChanged();
                                 }
                                 catch(IOException e){
                                     e.printStackTrace();
+                                    Log.d("FFF", "UNABLE TO WRITE TO BOOKMARKS");
                                 }
-
-                                myInternalArrayList.remove(position);
-                                notifyDataSetChanged();
-
+                                //myInternalArrayList.remove(position);
                                 Log.d("ARRAY", "SIZE IS NOW: " +myInternalArrayList.size());
-
                                 dialog.dismiss();
 
                             }
@@ -177,21 +177,12 @@ public class BookmarkAdapter extends BaseAdapter implements ListAdapter{
         ((Activity) thisContext).finish();
     }
 
-    public void deleteBookmark(int pos, File file) throws IOException{
-        theStream = new FileInputStream(file);
-        theReader = new BufferedReader(new InputStreamReader(theStream));
-        FileWriter theWriter = new FileWriter(file, true);
-        BufferedWriter bufferedWriter = new BufferedWriter(theWriter);
-
-        String current;
-        int count = 0;
-
-        while ((current = theReader.readLine()) != null){
-            count++;
-            continue;
-
-        }
-        theWriter.close();
-        theReader.close();
+    public void deleteBookmark(BookmarkListObject theObj) throws IOException{
+            myInternalArrayList.remove(theObj);
+            FileOutputStream fos = thisContext.openFileOutput("bookmarks.txt", Context.MODE_PRIVATE);
+            ObjectOutputStream out = new ObjectOutputStream(fos);
+            out.writeObject(myInternalArrayList);
+            out.close();
+            fos.close();
     }
 }

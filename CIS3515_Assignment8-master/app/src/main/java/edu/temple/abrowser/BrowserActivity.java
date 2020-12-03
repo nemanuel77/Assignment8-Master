@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,8 +15,10 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.PageControlInterface,
@@ -245,9 +248,10 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
                 String web = pagerFragment.getCurrentUrl();
                 listItem = new BookmarkListObject(title,web);
                 objectList.add(listItem);
+                writeToFile(objectList);
 
-                writeToFile("webpages.txt", title);
-                writeToFile("weburls.txt", web);
+                /*writeToFile ("webpages.txt", title);
+                writeToFile("weburls.txt", web);*/
                 Log.d("QQQ:", "ADDED: " +listItem.getThePageTitle() + "," + listItem.getTheUrl() +", COUNT: " +objectList.size());
 
             }
@@ -262,20 +266,19 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
     }
 
-    public void writeToFile(String file, String writeFile) throws IOException{
-        File theFile = new File(getFilesDir(), file);
-        FileWriter theWriter = new FileWriter(theFile, true);
-        BufferedWriter bWriter = new BufferedWriter(theWriter);
-        bWriter.append(writeFile);
-        bWriter.newLine();
-        bWriter.flush();
-        bWriter.close();
+    public void writeToFile(ArrayList<BookmarkListObject> theListObj) throws IOException{
+        //File theFile = new File(getFilesDir(), file);
+        FileOutputStream fos = openFileOutput("bookmarks.txt", Context.MODE_PRIVATE);
+        ObjectOutputStream out = new ObjectOutputStream(fos);
+        out.writeObject(theListObj);
+        out.close();
+        fos.close();
     }
 
     @Override
     public void openBookmarks() {
         Intent newIntent = new Intent(BrowserActivity.this, BookmarkActivity.class);
-        newIntent.putParcelableArrayListExtra("bookmarks", objectList);
+        //newIntent.putParcelableArrayListExtra("bookmarks", objectList);
         startActivityForResult(newIntent, REQ_CODE);
     }
 

@@ -3,7 +3,9 @@ package edu.temple.abrowser;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class BookmarkListObject implements Parcelable {
+import java.io.Serializable;
+
+public class BookmarkListObject implements Parcelable, Serializable {
     private String thePageTitle;
     private String theUrl;
 
