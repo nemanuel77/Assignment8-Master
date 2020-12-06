@@ -10,6 +10,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -44,6 +47,41 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     boolean listMode;
 
     private static final int REQ_CODE = 0;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.mycustommenu, menu);
+
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int menuItem = item.getItemId();
+        if (menuItem == R.id.sharePage && pagerFragment.getNumOfPageFragments() != 0){
+
+            if (pagerFragment.getCurrentUrl() != null && pagerFragment.getCurrentTitle() != null){
+                Toast.makeText(this, "Shareable webpage", Toast.LENGTH_SHORT).show();
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, pagerFragment.getCurrentUrl());
+                sendIntent.setType("text/plain");
+
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
+            }
+
+            //Toast.makeText(this, "Blank fragment", Toast.LENGTH_SHORT).show();
+
+        }
+        else{
+            Toast.makeText(this, "Cannot share empty browser", Toast.LENGTH_SHORT).show();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

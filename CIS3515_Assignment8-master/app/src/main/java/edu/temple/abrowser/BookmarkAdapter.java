@@ -46,9 +46,9 @@ public class BookmarkAdapter extends BaseAdapter implements ListAdapter{
     private Context thisContext;
     ViewHolder viewHolder;
 
-    FileInputStream theStream;
+   /* FileInputStream theStream;
     BufferedReader theReader;
-    File txtfile;
+    File txtfile;*/
 
     SharedPreferences savedBookmarks;
     /*TextView myListTextView;
