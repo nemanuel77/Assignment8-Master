@@ -88,6 +88,11 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /*Intent loadIntent = getIntent();
+        String getAction = loadIntent.getAction();*/
+        //Toast.makeText(this, "hi :)", Toast.LENGTH_SHORT).show();
+        //Log.d("RRR", "action: " +getAction);
+
 
         if (savedInstanceState != null)
             pages = (ArrayList) savedInstanceState.getSerializable(PAGES_KEY);
@@ -148,6 +153,18 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
             }
         }
 
+       /* if (Intent.ACTION_SEND.equals(getAction)){
+            String loadUrl = loadIntent.getStringExtra(Intent.EXTRA_TEXT);
+            Toast.makeText(this, "url is: "+ loadUrl, Toast.LENGTH_LONG).show();
+            //Log.d("EEE", "url is: " +loadUrl);
+            go(loadUrl);
+        }
+        else{
+            Toast.makeText(this, "you're getting " +Intent.ACTION_SEND.toString(), Toast.LENGTH_LONG).show();
+        }*/
+
+        //Toast.makeText(this, "pagerFragment is " +(pagerFragment == null) , Toast.LENGTH_LONG).show();
+
 
     }
 
@@ -163,9 +180,11 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
     // Notify all observers of collections
     private void notifyWebsitesChanged() {
+
         pagerFragment.notifyWebsitesChanged();
         if (listMode)
             pageListFragment.notifyWebsitesChanged();
+
     }
 
     @Override
@@ -231,6 +250,31 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     @Override
     public void forward() {
         pagerFragment.forward();
+    }
+
+    @Override
+    public void attachedFragment() {
+
+        Intent loadIntent = getIntent();
+        String getAction = loadIntent.getAction();
+        
+
+    }
+
+    @Override
+    public void attachedPagerFragment() {
+        Intent intent = getIntent();
+        String s = intent.getDataString();
+
+        if (s!=null){
+            if (s.startsWith("http://")){
+                s = s.replace("http://", "https://");
+            }
+            go(s);
+        }
+
+
+
     }
 
     /**

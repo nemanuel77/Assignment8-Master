@@ -108,6 +108,7 @@ public class PageViewerFragment extends Fragment implements Parcelable {
             }
         }
 
+        browserActivity.attachedFragment();
         return l;
     }
 
@@ -177,6 +178,7 @@ public class PageViewerFragment extends Fragment implements Parcelable {
     }
 
     interface PageViewerInterface {
+        void attachedFragment();
         void updateUrl(String url);
         void updateTitle(String title);
     }

@@ -110,6 +110,7 @@ public class PagerFragment extends Fragment {
             public void onPageScrollStateChanged(int state) {}
         });
 
+        browserActivity.attachedPagerFragment();
         return l;
     }
 
@@ -117,7 +118,10 @@ public class PagerFragment extends Fragment {
      * Update the list of fragments in viewpager when a new page is added
       */
     public void notifyWebsitesChanged() {
-        viewPager.getAdapter().notifyDataSetChanged();
+        if (viewPager != null){
+            viewPager.getAdapter().notifyDataSetChanged();
+        }
+        //viewPager.getAdapter().notifyDataSetChanged();
     }
 
     /**
@@ -173,6 +177,7 @@ public class PagerFragment extends Fragment {
     public int getNumOfPageFragments(){ return ( viewPager.getChildCount());}
 
     interface PagerInterface {
+        void attachedPagerFragment();
         void updateUrl(String url);
         void updateTitle(String title);
     }
